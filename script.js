@@ -43,7 +43,7 @@ const originalMap = map.map(function(row) { return row.slice(); });
 const levels = [
   {
     number: 1,
-    name: "Stegosaurus Start",
+    name: "Tiny Triceratops Trail",
     // Level 1 layout is the same as the main map defined at the top.
     layout: [
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -61,7 +61,7 @@ const levels = [
   },
   {
     number: 2,
-    name: "Raptor Run",
+    name: "Raptor Ridge Run",
     // Placeholder maze – more walls, same entry/exit positions.
     layout: [
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -79,7 +79,7 @@ const levels = [
   },
   {
     number: 3,
-    name: "Triceratops Trail",
+    name: "Stegosaurus Stomp",
     // Placeholder maze – longer corridors.
     layout: [
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -97,7 +97,7 @@ const levels = [
   },
   {
     number: 4,
-    name: "T-Rex Territory",
+    name: "T-Rex Treasure Maze",
     // Placeholder maze – tighter paths, harder navigation.
     layout: [
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -115,7 +115,7 @@ const levels = [
   },
   {
     number: 5,
-    name: "Pteranodon Peak",
+    name: "Brontosaurus Star Lab",
     // Placeholder maze – most complex layout, fastest enemy.
     layout: [
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
