@@ -1,0 +1,84 @@
+/* ---- General page styles ---- */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #1a1a2e;
+  color: #eee;
+  text-align: center;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+#score-display {
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+
+.instructions {
+  margin-top: 16px;
+  font-size: 0.95rem;
+  color: #aaa;
+}
+
+/* ---- Win message ---- */
+#win-message {
+  font-size: 1.5rem;
+  color: #f9e04b;
+  margin-bottom: 12px;
+}
+
+.hidden {
+  display: none;
+}
+
+/* ---- Grid layout ---- */
+/* The grid is a table-like box made of rows of cells.
+   Each cell is 48px × 48px. */
+#grid {
+  display: inline-block;
+  border: 3px solid #555;
+  line-height: 0; /* removes gap between inline-block cells */
+}
+
+/* One row of cells */
+.row {
+  display: flex;
+}
+
+/* ---- Individual cells ---- */
+.cell {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  box-sizing: border-box;
+}
+
+/* Wall cell – solid dark block */
+.cell.wall {
+  background-color: #2e4057;
+  border: 2px solid #1c2d40;
+}
+
+/* Open path cell */
+.cell.path {
+  background-color: #0f3460;
+  border: 1px solid #16213e;
+}
+
+/* Player cell – bright yellow so it stands out */
+.cell.player {
+  background-color: #f9e04b;
+  border: 1px solid #c8b400;
+}
+
+/* Dino collectible cell */
+.cell.dino {
+  background-color: #0f3460;
+  border: 1px solid #16213e;
+}
