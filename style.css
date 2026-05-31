@@ -30,6 +30,13 @@ h1 {
   color: #aaa;
 }
 
+/* ---- Level-complete message (shown briefly between levels) ---- */
+#level-complete-message {
+  font-size: 1.4rem;
+  color: #7fff7f;
+  margin-bottom: 12px;
+}
+
 /* ---- Win message ---- */
 #win-message {
   font-size: 1.5rem;
