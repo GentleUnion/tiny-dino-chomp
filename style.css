@@ -22,6 +22,46 @@ h1 {
 #lives-display {
   font-size: 1.2rem;
   margin-bottom: 12px;
+  border-radius: 6px;
+  padding: 2px 8px;
+}
+
+.score-flash {
+  animation: scoreFlash 0.35s ease-out;
+}
+
+.lives-flash {
+  animation: livesFlash 0.35s ease-out;
+}
+
+@keyframes scoreFlash {
+  0% {
+    transform: scale(1);
+    color: #eee;
+  }
+  50% {
+    transform: scale(1.12);
+    color: #ffe36d;
+  }
+  100% {
+    transform: scale(1);
+    color: #eee;
+  }
+}
+
+@keyframes livesFlash {
+  0% {
+    transform: scale(1);
+    color: #eee;
+  }
+  50% {
+    transform: scale(1.12);
+    color: #ff9a9a;
+  }
+  100% {
+    transform: scale(1);
+    color: #eee;
+  }
 }
 
 .instructions {
