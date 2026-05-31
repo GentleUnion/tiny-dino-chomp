@@ -62,6 +62,19 @@ h1 {
   background-color: #ffd700;
 }
 
+#welcome-box {
+  margin: 10px auto 14px;
+  padding: 10px 14px;
+  max-width: 420px;
+  border-radius: 10px;
+  background-color: #2a3b57;
+  color: #f9f4b5;
+}
+
+#welcome-box p {
+  margin: 4px 0;
+}
+
 /* ---- Grid layout ---- */
 /* The grid is a table-like box made of rows of cells.
    Each cell is 48px × 48px. */
