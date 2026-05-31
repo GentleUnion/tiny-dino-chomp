@@ -393,6 +393,7 @@ function move(direction) {
     dinosCollectedThisLevel++;
     map[newRow][newCol] = 0; // remove the dino from the map
     updateScore();
+    triggerInfoFlash("score-display", "score-flash");
     applyCurrentLevelEnemySpeed(); // enemy gets 25ms faster for each dino collected
     checkWin();
   }
@@ -420,6 +421,18 @@ function updateLives() {
 }
 
 // ============================================================
+// TRIGGER INFO FLASH – restart a short CSS animation on an element
+// ============================================================
+function triggerInfoFlash(elementId, flashClass) {
+  var element = document.getElementById(elementId);
+  if (!element) { return; }
+
+  element.classList.remove(flashClass);
+  void element.offsetWidth; // force reflow so the animation can restart
+  element.classList.add(flashClass);
+}
+
+// ============================================================
 // UPDATE LEVEL DISPLAY – show current level number and name
 // ============================================================
 function updateLevelDisplay() {
@@ -444,6 +457,7 @@ function loseLife() {
 
   lives--;
   updateLives();
+  triggerInfoFlash("lives-display", "lives-flash");
 
   if (lives === 0) {
     gameOver = true;
