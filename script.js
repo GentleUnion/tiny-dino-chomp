@@ -236,6 +236,21 @@ function prepareCurrentLevel() {
 }
 
 // ============================================================
+// LOAD LEVEL – reset board, collectibles, and positions for the
+// current level. Does NOT reset the total score.
+// ============================================================
+function loadLevel() {
+  // Load a fresh copy of the current level's layout (resets board and collectibles).
+  loadCurrentLevelData();
+
+  // Locate player and enemy start positions and count collectibles.
+  prepareCurrentLevel();
+
+  updateLevelDisplay();
+  drawGrid();
+}
+
+// ============================================================
 // APPLY ENEMY SPEED – start/restart enemy timer for this level
 // ============================================================
 function applyCurrentLevelEnemySpeed() {
@@ -262,6 +277,9 @@ function startGame() {
 // RESTART – fully reset the game and start playing immediately
 // ============================================================
 function restart() {
+  // Go back to level 1 so the game restarts from the beginning.
+  currentLevelIndex = 0;
+  loadCurrentLevelData();
   setup();
   startGame();
 }
@@ -408,12 +426,10 @@ function checkWin() {
   // All dinos collected: move to the next level if one exists.
   if (levels[currentLevelIndex + 1]) {
     currentLevelIndex++;
-    loadCurrentLevelData();
-    prepareCurrentLevel();
-    updateLevelDisplay();
-    drawGrid();
-
-    // Apply this level's enemy speed right after loading it.
+    // Reset board, collectibles, and positions for the new level.
+    // Score is intentionally NOT reset here.
+    loadLevel();
+    // Apply the new level's enemy speed.
     applyCurrentLevelEnemySpeed();
     return;
   }
