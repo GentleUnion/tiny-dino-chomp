@@ -98,22 +98,35 @@ h1 {
 /* ---- Control buttons ---- */
 #controls {
   margin: 10px 0;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
 }
 
 #controls button {
-  font-size: 1rem;
-  padding: 8px 20px;
-  margin: 0 6px;
+  font-size: 1.2rem;
+  padding: 12px 26px;
   cursor: pointer;
   border: none;
-  border-radius: 6px;
-  background-color: #f9e04b;
+  border-radius: 12px;
   color: #1a1a2e;
   font-weight: bold;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
 }
 
 #controls button:hover {
-  background-color: #ffd700;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.22);
+  filter: brightness(1.06);
+}
+
+#controls button:first-child {
+  background: linear-gradient(180deg, #7dff8f 0%, #4fdb66 100%);
+}
+
+#controls button:last-child {
+  background: linear-gradient(180deg, #ffd36b 0%, #ffab38 100%);
 }
 
 #welcome-box {
