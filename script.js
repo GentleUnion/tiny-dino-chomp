@@ -57,7 +57,7 @@ const levels = [
       [1, 0, 1, 1, 1, 1, 1, 0, 0, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ],
-    enemySpeed: 500  // enemy moves every 500ms
+    enemySpeed: 550  // enemy moves every 550ms
   },
   {
     number: 3,
@@ -75,7 +75,7 @@ const levels = [
       [1, 0, 1, 1, 0, 1, 1, 1, 0, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ],
-    enemySpeed: 450  // enemy moves every 450ms
+    enemySpeed: 500  // enemy moves every 500ms
   },
   {
     number: 4,
@@ -93,7 +93,7 @@ const levels = [
       [1, 0, 1, 1, 0, 1, 1, 1, 0, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ],
-    enemySpeed: 400  // enemy moves every 400ms
+    enemySpeed: 450  // enemy moves every 450ms
   },
   {
     number: 5,
@@ -111,7 +111,7 @@ const levels = [
       [1, 0, 1, 1, 0, 1, 1, 0, 0, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ],
-    enemySpeed: 350  // enemy moves every 350ms (fastest)
+    enemySpeed: 400  // enemy moves every 400ms (fastest)
   }
 ];
 
@@ -236,13 +236,26 @@ function prepareCurrentLevel() {
 }
 
 // ============================================================
+// APPLY ENEMY SPEED – start/restart enemy timer for this level
+// ============================================================
+function applyCurrentLevelEnemySpeed() {
+  // Reset any previous enemy timer before applying the new speed.
+  if (enemyTimer) { clearInterval(enemyTimer); enemyTimer = null; }
+
+  // Only run movement when gameplay is active.
+  if (!gameStarted || gameOver || !currentLevel) { return; }
+
+  // Use the speed from the current level object.
+  enemyTimer = setInterval(moveEnemy, currentLevel.enemySpeed);
+}
+
+// ============================================================
 // START GAME – begin gameplay (enemy starts moving, keys work)
 // ============================================================
 function startGame() {
   if (gameStarted || gameOver) { return; }
   gameStarted = true;
-  // Use the current level's speed from the levels array.
-  enemyTimer = setInterval(moveEnemy, currentLevel.enemySpeed);
+  applyCurrentLevelEnemySpeed();
 }
 
 // ============================================================
@@ -400,11 +413,8 @@ function checkWin() {
     updateLevelDisplay();
     drawGrid();
 
-    // Restart enemy timer so the new level uses its own speed.
-    if (enemyTimer) { clearInterval(enemyTimer); }
-    if (gameStarted) {
-      enemyTimer = setInterval(moveEnemy, currentLevel.enemySpeed);
-    }
+    // Apply this level's enemy speed right after loading it.
+    applyCurrentLevelEnemySpeed();
     return;
   }
 
@@ -424,7 +434,7 @@ function checkWin() {
 }
 
 // ============================================================
-// MOVE ENEMY – called automatically by the timer every 600ms
+// MOVE ENEMY – called automatically by the current level timer
 // ============================================================
 function moveEnemy() {
   if (gameOver) { return; }
