@@ -25,6 +25,9 @@ const map = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ];
 
+// ----- Original map snapshot (used to restore the level on restart) -----
+const originalMap = map.map(function(row) { return row.slice(); });
+
 // ----- Player position -----
 // We find the starting cell (value 3) when the page loads.
 let playerRow = 0;
@@ -54,15 +57,33 @@ let lives = 3;
 let totalDinos = 0;
 let gameOver = false;
 
+// ----- Whether the player has pressed Start yet -----
+let gameStarted = false;
+
 // ============================================================
-// SETUP – run once when the page loads
+// SETUP – reset all game state and draw the initial grid.
+// Does NOT start movement; call startGame() for that.
 // ============================================================
 function setup() {
+  // Restore the map to its original layout (brings back all dinos).
+  for (var r = 0; r < originalMap.length; r++) {
+    map[r] = originalMap[r].slice();
+  }
+
   score = 0;
   lives = 3;
+  totalDinos = 0;
   gameOver = false;
+  gameStarted = false;
 
-  // Count how many dinos are on the map and find the player/enemy start positions.
+  // Hide win/lose messages.
+  document.getElementById("win-message").classList.add("hidden");
+  document.getElementById("lose-message").classList.add("hidden");
+
+  // Stop any running enemy timer.
+  if (enemyTimer) { clearInterval(enemyTimer); enemyTimer = null; }
+
+  // Count dinos and find player/enemy starting positions.
   for (var r = 0; r < map.length; r++) {
     for (var c = 0; c < map[r].length; c++) {
       if (map[r][c] === 2) {
@@ -87,14 +108,27 @@ function setup() {
     }
   }
 
-  // Clear any previous enemy timer, then start a new one.
-  if (enemyTimer) { clearInterval(enemyTimer); enemyTimer = null; }
-  // The enemy moves once every 600 milliseconds.
-  enemyTimer = setInterval(moveEnemy, 600);
-
   updateScore();
   updateLives();
   drawGrid();
+}
+
+// ============================================================
+// START GAME – begin gameplay (enemy starts moving, keys work)
+// ============================================================
+function startGame() {
+  if (gameStarted || gameOver) { return; }
+  gameStarted = true;
+  // The enemy moves once every 600 milliseconds.
+  enemyTimer = setInterval(moveEnemy, 600);
+}
+
+// ============================================================
+// RESTART – fully reset the game and start playing immediately
+// ============================================================
+function restart() {
+  setup();
+  startGame();
 }
 
 // ============================================================
@@ -143,7 +177,7 @@ function drawGrid() {
 // MOVE – handle arrow key presses
 // ============================================================
 function move(direction) {
-  if (gameOver) { return; }
+  if (!gameStarted || gameOver) { return; }
 
   // Calculate where the player wants to go.
   var newRow = playerRow;
