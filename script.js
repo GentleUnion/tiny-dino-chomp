@@ -39,7 +39,7 @@ const levels = [
       [1, 2, 0, 1, 0, 0, 1, 0, 0, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ],
-    enemySpeed: 600  // enemy moves every 600ms (slowest)
+    enemySpeed: 700  // enemy moves every 700ms (slowest – most forgiving)
   },
   {
     number: 2,
@@ -57,7 +57,7 @@ const levels = [
       [1, 2, 0, 1, 0, 1, 2, 0, 0, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ],
-    enemySpeed: 550  // enemy moves every 550ms
+    enemySpeed: 580  // enemy moves every 580ms (a little faster)
   },
   {
     number: 3,
@@ -75,7 +75,7 @@ const levels = [
       [1, 2, 1, 0, 0, 1, 0, 0, 2, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ],
-    enemySpeed: 500  // enemy moves every 500ms
+    enemySpeed: 480  // enemy moves every 480ms
   },
   {
     number: 4,
@@ -93,7 +93,7 @@ const levels = [
       [1, 0, 0, 1, 1, 1, 0, 0, 2, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ],
-    enemySpeed: 450  // enemy moves every 450ms
+    enemySpeed: 380  // enemy moves every 380ms
   },
   {
     number: 5,
@@ -111,7 +111,7 @@ const levels = [
       [1, 0, 0, 1, 1, 1, 2, 0, 2, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ],
-    enemySpeed: 400  // enemy moves every 400ms (fastest)
+    enemySpeed: 300  // enemy moves every 300ms (fastest – most challenging)
   }
 ];
 
@@ -166,6 +166,8 @@ let lives = 3;
 
 // ----- Total dinos on the map (counted at start) -----
 let totalDinos = 0;
+// ----- Dinos collected in the current level (used for in-level speed ramp) -----
+let dinosCollectedThisLevel = 0;
 let gameOver = false;
 
 // ----- Whether the player has pressed Start yet -----
@@ -208,6 +210,7 @@ function setup() {
 // ============================================================
 function prepareCurrentLevel() {
   totalDinos = 0;
+  dinosCollectedThisLevel = 0; // reset in-level speed-ramp counter
 
   // Count dinos and find player/enemy starting positions.
   for (var r = 0; r < map.length; r++) {
@@ -260,8 +263,11 @@ function applyCurrentLevelEnemySpeed() {
   // Only run movement when gameplay is active.
   if (!gameStarted || gameOver || !currentLevel) { return; }
 
-  // Use the speed from the current level object.
-  enemyTimer = setInterval(moveEnemy, currentLevel.enemySpeed);
+  // Each dino collected this level makes the enemy 25ms faster.
+  // The interval never drops below 200ms (a safe minimum).
+  var interval = Math.max(currentLevel.enemySpeed - dinosCollectedThisLevel * 25, 200);
+
+  enemyTimer = setInterval(moveEnemy, interval);
 }
 
 // ============================================================
@@ -351,8 +357,10 @@ function move(direction) {
   // Check for a dino collectible on the target cell.
   if (map[newRow][newCol] === 2) {
     score++;
+    dinosCollectedThisLevel++;
     map[newRow][newCol] = 0; // remove the dino from the map
     updateScore();
+    applyCurrentLevelEnemySpeed(); // enemy gets 25ms faster for each dino collected
     checkWin();
   }
 
