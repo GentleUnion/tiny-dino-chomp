@@ -115,8 +115,12 @@ const levels = [
   }
 ];
 
-// ----- Current level (start at level 1 / levels[0]) -----
-const currentLevel = levels[0];
+// ----- Current level index (start at 0 = first level) -----
+// Keeping this separate makes future level switching easy to follow.
+let currentLevelIndex = 0;
+
+// ----- Current level object (read from the levels array using the index) -----
+const currentLevel = levels[currentLevelIndex];
 
 // ----- Level map (copied from currentLevel.layout) -----
 // We copy rows so gameplay changes do not edit the level template.
@@ -216,7 +220,7 @@ function setup() {
 function startGame() {
   if (gameStarted || gameOver) { return; }
   gameStarted = true;
-  // Use the current level's speed (level 1 right now).
+  // Use the current level's speed from the levels array.
   enemyTimer = setInterval(moveEnemy, currentLevel.enemySpeed);
 }
 
