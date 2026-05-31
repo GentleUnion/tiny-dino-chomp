@@ -211,6 +211,7 @@ function setup() {
 
   updateScore();
   updateLives();
+  updateLevelDisplay();
   drawGrid();
 }
 
@@ -324,6 +325,14 @@ function updateScore() {
 // ============================================================
 function updateLives() {
   document.getElementById("lives").textContent = lives;
+}
+
+// ============================================================
+// UPDATE LEVEL DISPLAY – show current level number and name
+// ============================================================
+function updateLevelDisplay() {
+  document.getElementById("level-number").textContent = currentLevel.number;
+  document.getElementById("level-name").textContent = currentLevel.name;
 }
 
 // ============================================================
