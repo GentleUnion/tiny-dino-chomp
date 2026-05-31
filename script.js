@@ -337,8 +337,11 @@ function updateLevelDisplay() {
   var levelNameEl = document.getElementById("level-name");
   if (!levelNumberEl || !levelNameEl) { return; }
 
-  levelNumberEl.textContent = currentLevel.number;
-  levelNameEl.textContent = currentLevel.name;
+  var levelNumber = currentLevel.number || 1;
+  var levelName = currentLevel.name || "Unknown Level";
+
+  levelNumberEl.textContent = levelNumber;
+  levelNameEl.textContent = levelName;
 }
 
 // ============================================================
