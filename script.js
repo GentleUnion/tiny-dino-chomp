@@ -161,6 +161,8 @@ function updateLives() {
 // LOSE LIFE – used when the player makes a blocked move
 // ============================================================
 function loseLife() {
+  if (gameOver || lives <= 0) { return; }
+
   lives--;
   updateLives();
 
