@@ -116,18 +116,28 @@ const levels = [
 ];
 
 // ----- Current level index (start at 0 = first level) -----
-// Keeping this separate makes future level switching easy to follow.
+// This increases when a level is completed.
 let currentLevelIndex = 0;
 
-// ----- Current level object (read from the levels array using the index) -----
-const currentLevel = levels[currentLevelIndex];
+// ----- Current level object and map state -----
+let currentLevel = null;
+let map = [];
+let originalMap = [];
 
-// ----- Level map (copied from currentLevel.layout) -----
-// We copy rows so gameplay changes do not edit the level template.
-const map = currentLevel.layout.map(function(row) { return row.slice(); });
+// ============================================================
+// LOAD CURRENT LEVEL DATA – copy layout from levels[] by index
+// ============================================================
+function loadCurrentLevelData() {
+  currentLevel = levels[currentLevelIndex];
+  if (!currentLevel) { return; }
 
-// ----- Original map snapshot (used to restore the level on restart) -----
-const originalMap = map.map(function(row) { return row.slice(); });
+  // Copy each row so level templates are never edited by gameplay.
+  map = currentLevel.layout.map(function (row) { return row.slice(); });
+  originalMap = map.map(function (row) { return row.slice(); });
+}
+
+// Load level 1 immediately when the page script starts.
+loadCurrentLevelData();
 
 // ----- Player position -----
 // We find the starting cell (value 3) when the page loads.
@@ -185,6 +195,21 @@ function setup() {
   if (enemyTimer) { clearInterval(enemyTimer); enemyTimer = null; }
 
   // Count dinos and find player/enemy starting positions.
+  prepareCurrentLevel();
+
+  updateScore();
+  updateLives();
+  updateLevelDisplay();
+  drawGrid();
+}
+
+// ============================================================
+// PREPARE CURRENT LEVEL – count dinos and locate start positions
+// ============================================================
+function prepareCurrentLevel() {
+  totalDinos = 0;
+
+  // Count dinos and find player/enemy starting positions.
   for (var r = 0; r < map.length; r++) {
     for (var c = 0; c < map[r].length; c++) {
       if (map[r][c] === 2) {
@@ -208,11 +233,6 @@ function setup() {
       }
     }
   }
-
-  updateScore();
-  updateLives();
-  updateLevelDisplay();
-  drawGrid();
 }
 
 // ============================================================
@@ -360,12 +380,31 @@ function loseLife() {
 }
 
 // ============================================================
-// CHECK WIN – show a win message when all dinos are collected
+// CHECK WIN – move to next level when all dinos are collected
 // ============================================================
 function checkWin() {
-  if (score >= totalDinos) {
-    gameOver = true;
-    document.getElementById("win-message").classList.remove("hidden");
+  // If any dinos remain on the board, this level is not done yet.
+  for (var r = 0; r < map.length; r++) {
+    for (var c = 0; c < map[r].length; c++) {
+      if (map[r][c] === 2) {
+        return;
+      }
+    }
+  }
+
+  // All dinos collected: move to the next level if one exists.
+  if (levels[currentLevelIndex + 1]) {
+    currentLevelIndex++;
+    loadCurrentLevelData();
+    prepareCurrentLevel();
+    updateLevelDisplay();
+    drawGrid();
+
+    // Restart enemy timer so the new level uses its own speed.
+    if (enemyTimer) { clearInterval(enemyTimer); }
+    if (gameStarted) {
+      enemyTimer = setInterval(moveEnemy, currentLevel.enemySpeed);
+    }
   }
 }
 
