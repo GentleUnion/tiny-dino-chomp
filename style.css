@@ -19,7 +19,8 @@ h1 {
 }
 
 #score-display,
-#lives-display {
+#lives-display,
+#dinos-left-display {
   font-size: 1.2rem;
   margin-bottom: 12px;
   border-radius: 6px;

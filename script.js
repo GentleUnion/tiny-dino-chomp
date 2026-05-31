@@ -204,6 +204,7 @@ function setup() {
 
   updateScore();
   updateLives();
+  updateDinosLeft();
   updateLevelDisplay();
   drawGrid();
 }
@@ -252,6 +253,7 @@ function loadLevel() {
   // Locate player and enemy start positions and count collectibles.
   prepareCurrentLevel();
 
+  updateDinosLeft();
   updateLevelDisplay();
   drawGrid();
 }
@@ -393,6 +395,7 @@ function move(direction) {
     dinosCollectedThisLevel++;
     map[newRow][newCol] = 0; // remove the dino from the map
     updateScore();
+    updateDinosLeft();
     triggerInfoFlash("score-display", "score-flash");
     applyCurrentLevelEnemySpeed(); // enemy gets 25ms faster for each dino collected
     checkWin();
@@ -418,6 +421,16 @@ function updateScore() {
 // ============================================================
 function updateLives() {
   document.getElementById("lives").textContent = lives;
+}
+
+// ============================================================
+// UPDATE DINOS LEFT – refresh remaining dinos for this level
+// ============================================================
+function updateDinosLeft() {
+  var dinosLeftEl = document.getElementById("dinos-left");
+  if (!dinosLeftEl) { return; }
+
+  dinosLeftEl.textContent = totalDinos - dinosCollectedThisLevel;
 }
 
 // ============================================================
