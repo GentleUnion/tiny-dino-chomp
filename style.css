@@ -133,8 +133,11 @@ h1 {
 
 /* Dino collectible cell */
 .cell.dino {
-  background-color: #0f3460;
-  border: 1px solid #16213e;
+  background: radial-gradient(circle at 35% 35%, #fff4a3 0%, #ffd166 45%, #ff9f1c 100%);
+  border: 2px solid #ff7b00;
+  box-shadow: inset 0 0 0 1px #ffe8a3, 0 0 8px rgba(255, 193, 7, 0.65);
+  transform: scale(1.04);
+  z-index: 1;
 }
 
 /* Enemy cell – dark red so it looks dangerous */
