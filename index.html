@@ -9,11 +9,15 @@
 <body>
   <h1>🦕 Tiny Dino Chomp</h1>
 
-  <!-- Score display -->
-  <p id="score-display">Score: <span id="score">0</span></p>
+  <!-- Top info bar -->
+  <div id="info-bar">
+    <p id="score-display">Score: <span id="score">0</span></p>
+    <p id="lives-display">Lives: <span id="lives">3</span></p>
+  </div>
 
   <!-- Win message (hidden until all dinos collected) -->
   <p id="win-message" class="hidden">You chomped all the dinos! 🎉</p>
+  <p id="lose-message" class="hidden">You ran out of lives! Game over 💥</p>
 
   <!-- The game grid is built here by script.js -->
   <div id="grid"></div>
