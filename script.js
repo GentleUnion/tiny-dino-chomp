@@ -10,24 +10,6 @@
 //   4 = enemy start 👾
 // ============================================================
 
-// ----- Level map (10 columns × 10 rows) -----
-// Feel free to change the numbers to redesign the maze!
-const map = [
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  [1, 3, 0, 2, 1, 0, 0, 2, 0, 1],
-  [1, 1, 0, 1, 1, 0, 1, 1, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 1, 1, 0, 1, 1, 0, 1, 1],
-  [1, 0, 2, 1, 0, 1, 2, 0, 0, 1],
-  [1, 1, 0, 1, 0, 1, 1, 1, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 4, 2, 1],
-  [1, 0, 1, 1, 0, 1, 1, 1, 0, 1],
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-];
-
-// ----- Original map snapshot (used to restore the level on restart) -----
-const originalMap = map.map(function(row) { return row.slice(); });
-
 // ============================================================
 // LEVELS DATA – all five levels defined in one place.
 //
@@ -37,8 +19,8 @@ const originalMap = map.map(function(row) { return row.slice(); });
 //   layout     – a 10×10 grid (same legend as the map above)
 //   enemySpeed – milliseconds between enemy moves (lower = faster)
 //
-// Level 1 uses the real maze already defined above.
-// Levels 2–5 use placeholder layouts for now.
+// Level 1 is used when the game starts.
+// Levels 2–5 are defined here for future use.
 // ============================================================
 const levels = [
   {
@@ -133,6 +115,16 @@ const levels = [
   }
 ];
 
+// ----- Current level (start at level 1 / levels[0]) -----
+const currentLevel = levels[0];
+
+// ----- Level map (copied from currentLevel.layout) -----
+// We copy rows so gameplay changes do not edit the level template.
+const map = currentLevel.layout.map(function(row) { return row.slice(); });
+
+// ----- Original map snapshot (used to restore the level on restart) -----
+const originalMap = map.map(function(row) { return row.slice(); });
+
 // ----- Player position -----
 // We find the starting cell (value 3) when the page loads.
 let playerRow = 0;
@@ -224,8 +216,8 @@ function setup() {
 function startGame() {
   if (gameStarted || gameOver) { return; }
   gameStarted = true;
-  // The enemy moves once every 600 milliseconds.
-  enemyTimer = setInterval(moveEnemy, 600);
+  // Use the current level's speed (level 1 right now).
+  enemyTimer = setInterval(moveEnemy, currentLevel.enemySpeed);
 }
 
 // ============================================================
