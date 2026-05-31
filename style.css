@@ -89,3 +89,9 @@ h1 {
   background-color: #0f3460;
   border: 1px solid #16213e;
 }
+
+/* Enemy cell – dark red so it looks dangerous */
+.cell.enemy {
+  background-color: #3d0000;
+  border: 1px solid #5a0000;
+}

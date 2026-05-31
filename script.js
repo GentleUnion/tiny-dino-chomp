@@ -7,6 +7,7 @@
 //   1 = wall
 //   2 = dinosaur collectible 🦕
 //   3 = player start 😮
+//   4 = enemy start 👾
 // ============================================================
 
 // ----- Level map (10 columns × 10 rows) -----
@@ -19,7 +20,7 @@ const map = [
   [1, 0, 1, 1, 0, 1, 1, 0, 1, 1],
   [1, 0, 2, 1, 0, 1, 2, 0, 0, 1],
   [1, 1, 0, 1, 0, 1, 1, 1, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 2, 1],
+  [1, 0, 0, 0, 0, 0, 0, 4, 2, 1],
   [1, 0, 1, 1, 0, 1, 1, 1, 0, 1],
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ];
@@ -28,6 +29,20 @@ const map = [
 // We find the starting cell (value 3) when the page loads.
 let playerRow = 0;
 let playerCol = 0;
+
+// ----- Player starting position (saved so we can reset after enemy collision) -----
+let playerStartRow = 0;
+let playerStartCol = 0;
+
+// ----- Enemy position -----
+// We find the starting cell (value 4) when the page loads.
+let enemyRow = 0;
+let enemyCol = 0;
+let enemyStartRow = 0;
+let enemyStartCol = 0;
+
+// ----- Enemy move timer handle -----
+let enemyTimer = null;
 
 // ----- Score -----
 let score = 0;
@@ -47,7 +62,7 @@ function setup() {
   lives = 3;
   gameOver = false;
 
-  // Count how many dinos are on the map and find the player start.
+  // Count how many dinos are on the map and find the player/enemy start positions.
   for (var r = 0; r < map.length; r++) {
     for (var c = 0; c < map[r].length; c++) {
       if (map[r][c] === 2) {
@@ -56,11 +71,26 @@ function setup() {
       if (map[r][c] === 3) {
         playerRow = r;
         playerCol = c;
+        playerStartRow = r;
+        playerStartCol = c;
         // Treat the start tile as an open path now that we know where we are.
+        map[r][c] = 0;
+      }
+      if (map[r][c] === 4) {
+        enemyRow = r;
+        enemyCol = c;
+        enemyStartRow = r;
+        enemyStartCol = c;
+        // Treat the enemy start tile as an open path too.
         map[r][c] = 0;
       }
     }
   }
+
+  // Clear any previous enemy timer, then start a new one.
+  if (enemyTimer) { clearInterval(enemyTimer); enemyTimer = null; }
+  // The enemy moves once every 600 milliseconds.
+  enemyTimer = setInterval(moveEnemy, 600);
 
   updateScore();
   updateLives();
@@ -86,6 +116,10 @@ function drawGrid() {
         // Draw the player
         cellEl.classList.add("player");
         cellEl.textContent = "😮";
+      } else if (r === enemyRow && c === enemyCol) {
+        // Draw the enemy
+        cellEl.classList.add("enemy");
+        cellEl.textContent = "👾";
       } else if (map[r][c] === 1) {
         // Draw a wall
         cellEl.classList.add("wall");
@@ -180,6 +214,46 @@ function checkWin() {
     gameOver = true;
     document.getElementById("win-message").classList.remove("hidden");
   }
+}
+
+// ============================================================
+// MOVE ENEMY – called automatically by the timer every 600ms
+// ============================================================
+function moveEnemy() {
+  if (gameOver) { return; }
+
+  // Build a list of the four neighbouring cells.
+  var neighbours = [
+    { r: enemyRow - 1, c: enemyCol },
+    { r: enemyRow + 1, c: enemyCol },
+    { r: enemyRow,     c: enemyCol - 1 },
+    { r: enemyRow,     c: enemyCol + 1 }
+  ];
+
+  // Keep only cells that are inside the grid and not walls.
+  var valid = neighbours.filter(function (d) {
+    return d.r >= 0 && d.r < map.length &&
+           d.c >= 0 && d.c < map[0].length &&
+           map[d.r][d.c] !== 1;
+  });
+
+  if (valid.length === 0) { return; } // enemy is surrounded – do nothing
+
+  // Pick one of the valid neighbours at random and move there.
+  var pick = valid[Math.floor(Math.random() * valid.length)];
+  enemyRow = pick.r;
+  enemyCol = pick.c;
+
+  // If the enemy lands on the player, remove a life and reset both positions.
+  if (enemyRow === playerRow && enemyCol === playerCol) {
+    loseLife();
+    playerRow = playerStartRow;
+    playerCol = playerStartCol;
+    enemyRow  = enemyStartRow;
+    enemyCol  = enemyStartCol;
+  }
+
+  drawGrid();
 }
 
 // ============================================================
