@@ -44,6 +44,12 @@ h1 {
   margin-bottom: 12px;
 }
 
+#paused-message {
+  font-size: 1.2rem;
+  color: #9ad8ff;
+  margin-bottom: 12px;
+}
+
 .hidden {
   display: none;
 }
