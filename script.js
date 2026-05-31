@@ -411,7 +411,10 @@ function checkWin() {
   // No next level means the player finished the final level.
   gameOver = true;
   gameStarted = false;
-  if (enemyTimer) { clearInterval(enemyTimer); enemyTimer = null; }
+  if (enemyTimer) {
+    clearInterval(enemyTimer);
+    enemyTimer = null;
+  }
 
   var winMessage = document.getElementById("win-message");
   if (winMessage) {
