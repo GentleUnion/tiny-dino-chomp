@@ -11,7 +11,7 @@
 
 // ----- Level map (10 columns × 10 rows) -----
 // Feel free to change the numbers to redesign the maze!
-var map = [
+const map = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   [1, 3, 0, 2, 1, 0, 0, 2, 0, 1],
   [1, 1, 0, 1, 1, 0, 1, 1, 0, 1],
@@ -26,14 +26,14 @@ var map = [
 
 // ----- Player position -----
 // We find the starting cell (value 3) when the page loads.
-var playerRow = 0;
-var playerCol = 0;
+let playerRow = 0;
+let playerCol = 0;
 
 // ----- Score -----
-var score = 0;
+let score = 0;
 
 // ----- Total dinos on the map (counted at start) -----
-var totalDinos = 0;
+let totalDinos = 0;
 
 // ============================================================
 // SETUP – run once when the page loads
