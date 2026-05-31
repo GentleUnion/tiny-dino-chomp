@@ -331,8 +331,14 @@ function updateLives() {
 // UPDATE LEVEL DISPLAY – show current level number and name
 // ============================================================
 function updateLevelDisplay() {
-  document.getElementById("level-number").textContent = currentLevel.number;
-  document.getElementById("level-name").textContent = currentLevel.name;
+  if (!currentLevel) { return; }
+
+  var levelNumberEl = document.getElementById("level-number");
+  var levelNameEl = document.getElementById("level-name");
+  if (!levelNumberEl || !levelNameEl) { return; }
+
+  levelNumberEl.textContent = currentLevel.number;
+  levelNameEl.textContent = currentLevel.name;
 }
 
 // ============================================================
