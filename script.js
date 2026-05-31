@@ -169,6 +169,7 @@ let totalDinos = 0;
 // ----- Dinos collected in the current level (used for in-level speed ramp) -----
 let dinosCollectedThisLevel = 0;
 let gameOver = false;
+let gamePaused = false;
 
 // ----- Whether the player has pressed Start yet -----
 let gameStarted = false;
@@ -188,10 +189,12 @@ function setup() {
   totalDinos = 0;
   gameOver = false;
   gameStarted = false;
+  gamePaused = false;
 
   // Hide win/lose messages.
   document.getElementById("win-message").classList.add("hidden");
   document.getElementById("lose-message").classList.add("hidden");
+  document.getElementById("paused-message").classList.add("hidden");
 
   // Stop any running enemy timer.
   if (enemyTimer) { clearInterval(enemyTimer); enemyTimer = null; }
@@ -276,6 +279,27 @@ function applyCurrentLevelEnemySpeed() {
 function startGame() {
   if (gameStarted || gameOver) { return; }
   gameStarted = true;
+  gamePaused = false;
+  document.getElementById("paused-message").classList.add("hidden");
+  applyCurrentLevelEnemySpeed();
+}
+
+// ============================================================
+// TOGGLE PAUSE – pause/resume gameplay with the P key
+// ============================================================
+function togglePause() {
+  if (!gameStarted || gameOver) { return; }
+
+  gamePaused = !gamePaused;
+  var pausedMessage = document.getElementById("paused-message");
+
+  if (gamePaused) {
+    if (enemyTimer) { clearInterval(enemyTimer); enemyTimer = null; }
+    if (pausedMessage) { pausedMessage.classList.remove("hidden"); }
+    return;
+  }
+
+  if (pausedMessage) { pausedMessage.classList.add("hidden"); }
   applyCurrentLevelEnemySpeed();
 }
 
@@ -336,7 +360,7 @@ function drawGrid() {
 // MOVE – handle arrow key presses
 // ============================================================
 function move(direction) {
-  if (!gameStarted || gameOver) { return; }
+  if (!gameStarted || gameOver || gamePaused) { return; }
 
   // Calculate where the player wants to go.
   var newRow = playerRow;
@@ -477,7 +501,7 @@ function checkWin() {
 // MOVE ENEMY – called automatically by the current level timer
 // ============================================================
 function moveEnemy() {
-  if (gameOver) { return; }
+  if (gameOver || gamePaused) { return; }
 
   // Build a list of the four neighbouring cells.
   var neighbours = [
@@ -517,6 +541,10 @@ function moveEnemy() {
 // KEYBOARD LISTENER – map arrow keys to the move() function
 // ============================================================
 document.addEventListener("keydown", function (event) {
+  if (event.key === "p" || event.key === "P") {
+    togglePause();
+    event.preventDefault();
+  }
   if (event.key === "ArrowUp")    { move("up");    event.preventDefault(); }
   if (event.key === "ArrowDown")  { move("down");  event.preventDefault(); }
   if (event.key === "ArrowLeft")  { move("left");  event.preventDefault(); }
