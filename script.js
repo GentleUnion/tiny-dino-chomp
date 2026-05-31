@@ -32,13 +32,21 @@ let playerCol = 0;
 // ----- Score -----
 let score = 0;
 
+// ----- Lives -----
+let lives = 3;
+
 // ----- Total dinos on the map (counted at start) -----
 let totalDinos = 0;
+let gameOver = false;
 
 // ============================================================
 // SETUP – run once when the page loads
 // ============================================================
 function setup() {
+  score = 0;
+  lives = 3;
+  gameOver = false;
+
   // Count how many dinos are on the map and find the player start.
   for (var r = 0; r < map.length; r++) {
     for (var c = 0; c < map[r].length; c++) {
@@ -54,6 +62,8 @@ function setup() {
     }
   }
 
+  updateScore();
+  updateLives();
   drawGrid();
 }
 
@@ -99,6 +109,8 @@ function drawGrid() {
 // MOVE – handle arrow key presses
 // ============================================================
 function move(direction) {
+  if (gameOver) { return; }
+
   // Calculate where the player wants to go.
   var newRow = playerRow;
   var newCol = playerCol;
@@ -109,11 +121,11 @@ function move(direction) {
   if (direction === "right") { newCol++; }
 
   // Check grid boundaries.
-  if (newRow < 0 || newRow >= map.length)    { return; }
-  if (newCol < 0 || newCol >= map[0].length) { return; }
+  if (newRow < 0 || newRow >= map.length)    { loseLife(); return; }
+  if (newCol < 0 || newCol >= map[0].length) { loseLife(); return; }
 
   // Check for walls – can't walk through them.
-  if (map[newRow][newCol] === 1) { return; }
+  if (map[newRow][newCol] === 1) { loseLife(); return; }
 
   // Check for a dino collectible on the target cell.
   if (map[newRow][newCol] === 2) {
@@ -139,10 +151,31 @@ function updateScore() {
 }
 
 // ============================================================
+// UPDATE LIVES – refresh the lives shown on screen
+// ============================================================
+function updateLives() {
+  document.getElementById("lives").textContent = lives;
+}
+
+// ============================================================
+// LOSE LIFE – used when the player makes a blocked move
+// ============================================================
+function loseLife() {
+  lives--;
+  updateLives();
+
+  if (lives <= 0) {
+    gameOver = true;
+    document.getElementById("lose-message").classList.remove("hidden");
+  }
+}
+
+// ============================================================
 // CHECK WIN – show a win message when all dinos are collected
 // ============================================================
 function checkWin() {
   if (score >= totalDinos) {
+    gameOver = true;
     document.getElementById("win-message").classList.remove("hidden");
   }
 }
