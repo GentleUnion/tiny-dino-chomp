@@ -161,12 +161,12 @@ function updateLives() {
 // LOSE LIFE – used when the player makes a blocked move
 // ============================================================
 function loseLife() {
-  if (gameOver || lives <= 0) { return; }
+  if (gameOver) { return; }
 
   lives--;
   updateLives();
 
-  if (lives <= 0) {
+  if (lives === 0) {
     gameOver = true;
     document.getElementById("lose-message").classList.remove("hidden");
   }
