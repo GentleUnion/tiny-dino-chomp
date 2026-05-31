@@ -405,6 +405,21 @@ function checkWin() {
     if (gameStarted) {
       enemyTimer = setInterval(moveEnemy, currentLevel.enemySpeed);
     }
+    return;
+  }
+
+  // No next level means the player finished the final level.
+  gameOver = true;
+  gameStarted = false;
+  if (enemyTimer) {
+    clearInterval(enemyTimer);
+    enemyTimer = null;
+  }
+
+  var winMessage = document.getElementById("win-message");
+  if (winMessage) {
+    winMessage.textContent = "You beat all 5 levels! Dino victory! 🏆🦕";
+    winMessage.classList.remove("hidden");
   }
 }
 
