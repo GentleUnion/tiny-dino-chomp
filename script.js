@@ -211,6 +211,7 @@ function setup() {
 
   updateScore();
   updateLives();
+  updateLevelDisplay();
   drawGrid();
 }
 
@@ -324,6 +325,23 @@ function updateScore() {
 // ============================================================
 function updateLives() {
   document.getElementById("lives").textContent = lives;
+}
+
+// ============================================================
+// UPDATE LEVEL DISPLAY – show current level number and name
+// ============================================================
+function updateLevelDisplay() {
+  if (!currentLevel) { return; }
+
+  var levelNumberEl = document.getElementById("level-number");
+  var levelNameEl = document.getElementById("level-name");
+  if (!levelNumberEl || !levelNameEl) { return; }
+
+  var levelNumber = currentLevel.number || 1;
+  var levelName = currentLevel.name || "Unknown Level";
+
+  levelNumberEl.textContent = levelNumber;
+  levelNameEl.textContent = levelName;
 }
 
 // ============================================================
