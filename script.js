@@ -425,12 +425,28 @@ function checkWin() {
 
   // All dinos collected: move to the next level if one exists.
   if (levels[currentLevelIndex + 1]) {
-    currentLevelIndex++;
-    // Reset board, collectibles, and positions for the new level.
-    // Score is intentionally NOT reset here.
-    loadLevel();
-    // Apply the new level's enemy speed.
-    applyCurrentLevelEnemySpeed();
+    // Pause the enemy so it doesn't move during the message delay.
+    if (enemyTimer) { clearInterval(enemyTimer); enemyTimer = null; }
+
+    // Show a cheerful level-complete message that includes the level name.
+    var completedLevelName = currentLevel ? currentLevel.name : "this level";
+    var levelMsg = document.getElementById("level-complete-message");
+    if (levelMsg) {
+      levelMsg.textContent = "🎉 Great job! You finished \"" + completedLevelName + "\"! Get ready… 🦕";
+      levelMsg.classList.remove("hidden");
+    }
+
+    // After a short delay, hide the message and load the next level.
+    setTimeout(function () {
+      if (levelMsg) { levelMsg.classList.add("hidden"); }
+      currentLevelIndex++;
+      // Reset board, collectibles, and positions for the new level.
+      // Score is intentionally NOT reset here.
+      loadLevel();
+      // Apply the new level's enemy speed.
+      applyCurrentLevelEnemySpeed();
+    }, 1500); // 1.5-second pause – short but readable
+
     return;
   }
 
