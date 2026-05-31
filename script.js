@@ -460,7 +460,7 @@ function checkWin() {
 
   var winMessage = document.getElementById("win-message");
   if (winMessage) {
-    winMessage.textContent = "You beat all 5 levels! Dino victory! 🏆🦕";
+    winMessage.textContent = "🎉 Roar-some job! You completed all 5 dinosaur levels! Press Restart to play again! 🦕";
     winMessage.classList.remove("hidden");
   }
 }
