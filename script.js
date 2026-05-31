@@ -28,6 +28,111 @@ const map = [
 // ----- Original map snapshot (used to restore the level on restart) -----
 const originalMap = map.map(function(row) { return row.slice(); });
 
+// ============================================================
+// LEVELS DATA – all five levels defined in one place.
+//
+// Each level object has:
+//   number     – which level this is (1–5)
+//   name       – a fun dinosaur-themed level name
+//   layout     – a 10×10 grid (same legend as the map above)
+//   enemySpeed – milliseconds between enemy moves (lower = faster)
+//
+// Level 1 uses the real maze already defined above.
+// Levels 2–5 use placeholder layouts for now.
+// ============================================================
+const levels = [
+  {
+    number: 1,
+    name: "Stegosaurus Start",
+    // Level 1 layout is the same as the main map defined at the top.
+    layout: [
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 3, 0, 2, 1, 0, 0, 2, 0, 1],
+      [1, 1, 0, 1, 1, 0, 1, 1, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 0, 1, 1, 0, 1, 1, 0, 1, 1],
+      [1, 0, 2, 1, 0, 1, 2, 0, 0, 1],
+      [1, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 4, 2, 1],
+      [1, 0, 1, 1, 0, 1, 1, 1, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    ],
+    enemySpeed: 600  // enemy moves every 600ms (slowest)
+  },
+  {
+    number: 2,
+    name: "Raptor Run",
+    // Placeholder maze – more walls, same entry/exit positions.
+    layout: [
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 3, 0, 0, 1, 0, 0, 2, 0, 1],
+      [1, 0, 1, 0, 1, 0, 1, 1, 0, 1],
+      [1, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+      [1, 0, 1, 1, 1, 1, 1, 0, 1, 1],
+      [1, 0, 2, 0, 0, 0, 2, 0, 0, 1],
+      [1, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+      [1, 0, 0, 0, 0, 0, 1, 4, 2, 1],
+      [1, 0, 1, 1, 1, 1, 1, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    ],
+    enemySpeed: 500  // enemy moves every 500ms
+  },
+  {
+    number: 3,
+    name: "Triceratops Trail",
+    // Placeholder maze – longer corridors.
+    layout: [
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 3, 0, 0, 0, 0, 0, 2, 0, 1],
+      [1, 1, 1, 1, 1, 0, 1, 1, 0, 1],
+      [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+      [1, 0, 1, 0, 1, 1, 1, 0, 1, 1],
+      [1, 0, 1, 2, 0, 0, 2, 0, 0, 1],
+      [1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 4, 2, 1],
+      [1, 0, 1, 1, 0, 1, 1, 1, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    ],
+    enemySpeed: 450  // enemy moves every 450ms
+  },
+  {
+    number: 4,
+    name: "T-Rex Territory",
+    // Placeholder maze – tighter paths, harder navigation.
+    layout: [
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 3, 0, 2, 1, 0, 1, 2, 0, 1],
+      [1, 0, 1, 0, 1, 0, 1, 0, 1, 1],
+      [1, 0, 1, 0, 0, 0, 1, 0, 0, 1],
+      [1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
+      [1, 0, 0, 0, 1, 0, 0, 0, 2, 1],
+      [1, 1, 1, 0, 1, 0, 1, 1, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 4, 2, 1],
+      [1, 0, 1, 1, 0, 1, 1, 1, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    ],
+    enemySpeed: 400  // enemy moves every 400ms
+  },
+  {
+    number: 5,
+    name: "Pteranodon Peak",
+    // Placeholder maze – most complex layout, fastest enemy.
+    layout: [
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 3, 0, 2, 1, 2, 0, 2, 0, 1],
+      [1, 0, 1, 0, 1, 0, 1, 0, 1, 1],
+      [1, 0, 1, 0, 0, 0, 1, 0, 0, 1],
+      [1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
+      [1, 2, 0, 0, 1, 0, 0, 0, 2, 1],
+      [1, 1, 1, 0, 1, 0, 1, 1, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 4, 2, 1],
+      [1, 0, 1, 1, 0, 1, 1, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    ],
+    enemySpeed: 350  // enemy moves every 350ms (fastest)
+  }
+];
+
 // ----- Player position -----
 // We find the starting cell (value 3) when the page loads.
 let playerRow = 0;
