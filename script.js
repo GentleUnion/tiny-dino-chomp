@@ -357,10 +357,19 @@ function drawGrid() {
 }
 
 // ============================================================
+// MOVEMENT STATE CHECK – keep player/enemy still when game stops
+// ============================================================
+function isMovementAllowed() {
+  // Movement is only allowed while actively playing.
+  // This blocks movement after game over, final win, before start, or while paused.
+  return gameStarted && !gameOver && !gamePaused;
+}
+
+// ============================================================
 // MOVE – handle arrow key presses
 // ============================================================
 function move(direction) {
-  if (!gameStarted || gameOver || gamePaused) { return; }
+  if (!isMovementAllowed()) { return; }
 
   // Calculate where the player wants to go.
   var newRow = playerRow;
@@ -438,6 +447,8 @@ function loseLife() {
 
   if (lives === 0) {
     gameOver = true;
+    gameStarted = false; // stop all movement after game over
+    if (enemyTimer) { clearInterval(enemyTimer); enemyTimer = null; }
     document.getElementById("lose-message").classList.remove("hidden");
   }
 }
@@ -501,7 +512,7 @@ function checkWin() {
 // MOVE ENEMY – called automatically by the current level timer
 // ============================================================
 function moveEnemy() {
-  if (gameOver || gamePaused) { return; }
+  if (!isMovementAllowed()) { return; }
 
   // Build a list of the four neighbouring cells.
   var neighbours = [
